@@ -41,6 +41,12 @@ class AuthApplication
         return ApiResponser::successResponser(['user' => $user, 'token' => $token], 'Login successfully');
     }
 
+    public function logout()
+    {
+        auth()->user()->tokens()->delete();
+        return ApiResponser::successResponser(null, 'Logout Successfully');
+    }
+
     public function generateToken(User $user)
     {
         return  $user->createToken(config('auth.auth_token'))->plainTextToken;
