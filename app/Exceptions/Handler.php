@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
 use App\Shareds\ApiResponser;
+use Illuminate\Auth\AuthenticationException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -34,6 +35,9 @@ class Handler extends ExceptionHandler
     {
         if ($exception instanceof ValidationException) {
             return ApiResponser::errorResponse($exception->errors());
+        }
+        if ($exception instanceof AuthenticationException) {
+            return ApiResponser::errorResponse($exception->getMessage());
         }
         return parent::render($request, $exception);
     }
