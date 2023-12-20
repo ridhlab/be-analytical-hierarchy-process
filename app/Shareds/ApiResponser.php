@@ -1,0 +1,26 @@
+<?php
+
+namespace App\Shareds;
+
+class ApiResponser
+{
+    const unprocessableEntity = 'unprocessableEntity';
+
+    public static function successResponser($data, $message = null, $code = 200)
+    {
+        return response()->json([
+            'status' => 'Success',
+            'message' => $message,
+            'data' => $data
+        ], $code);
+    }
+
+    public static function errorResponse($message = null, $code = 400)
+    {
+        return response()->json([
+            'status' => 'Error',
+            'message' => $message,
+            'data' => null
+        ], $code);
+    }
+}
