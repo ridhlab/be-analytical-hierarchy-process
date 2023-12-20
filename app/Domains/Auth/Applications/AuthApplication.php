@@ -14,10 +14,6 @@ class AuthApplication
 
     public function register(RegisterRequest $request)
     {
-        if ($request->validator->fails()) {
-            throw ValidationException::withMessages([ApiResponser::unprocessableEntity => $request->validator->getMessageBag()]);
-        }
-
         $user = new User();
         $user->name = $request->validated()['name'];
         $user->email = $request->validated()['email'];
@@ -30,9 +26,6 @@ class AuthApplication
 
     public function login(LoginRequest $request)
     {
-        if ($request->validator->fails()) {
-            throw ValidationException::withMessages([ApiResponser::unprocessableEntity => $request->validator->getMessageBag()]);
-        }
         if (!Auth::attempt($request->validated())) {
             return ApiResponser::errorResponse('Email atau password Anda Salah');
         }

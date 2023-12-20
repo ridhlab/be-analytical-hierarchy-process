@@ -6,6 +6,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
 use App\Shareds\ApiResponser;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -37,6 +38,9 @@ class Handler extends ExceptionHandler
             return ApiResponser::errorResponse($exception->errors());
         }
         if ($exception instanceof AuthenticationException) {
+            return ApiResponser::errorResponse($exception->getMessage());
+        }
+        if ($exception instanceof ModelNotFoundException) {
             return ApiResponser::errorResponse($exception->getMessage());
         }
         return parent::render($request, $exception);
