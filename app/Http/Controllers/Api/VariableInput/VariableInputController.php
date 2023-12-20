@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\VariableInput;
 
 use App\Domains\VariableInput\Applications\VariableInputCrudApplication;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\VariableInput\StoreVariableInputRequest;
+use App\Http\Requests\VariableInput\StoreUpdateVariableInputRequest;
 use App\Shareds\ApiResponser;
 
 class VariableInputController extends Controller
@@ -29,9 +29,15 @@ class VariableInputController extends Controller
         return ApiResponser::successResponser($data, 'Get data succesfully');
     }
 
-    public function store(StoreVariableInputRequest $request)
+    public function store(StoreUpdateVariableInputRequest $request)
     {
         $data = $this->variableInputCrudApplication->store($request);
         return ApiResponser::successResponser($data, ApiResponser::generateMessageStore('variable input'));
+    }
+
+    public function update(StoreUpdateVariableInputRequest $request, $id)
+    {
+        $data = $this->variableInputCrudApplication->update($id, $request);
+        return ApiResponser::successResponser($data, ApiResponser::generateMessageUpdate('variable input'));
     }
 }

@@ -31,6 +31,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/', 'index')->name('variable-input.index');
         Route::get('/{id}', 'show')->name('variable-input.show');
         Route::post('/store', 'store')->name('variable-input.store');
+        Route::put('/{id}/update', 'update')->name('variable-input.update');
     });
 
     Route::prefix('/variable-output')->controller(VariableInputController::class)->group(function () {

@@ -4,7 +4,7 @@ namespace App\Http\Requests\VariableInput;
 
 use App\Http\Requests\BaseRequest;
 
-class StoreVariableInputRequest extends BaseRequest
+class StoreUpdateVariableInputRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.

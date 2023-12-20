@@ -11,6 +11,11 @@ class ApiResponser
         return 'Store ' . $model . ' successfully';
     }
 
+    public static function generateMessageUpdate(string $model)
+    {
+        return 'Update ' . $model . ' successfully';
+    }
+
     public static function successResponser($data, $message = null, $code = 200)
     {
         return response()->json([
