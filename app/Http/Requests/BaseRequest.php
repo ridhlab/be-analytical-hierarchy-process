@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Shareds\ApiResponser;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\ValidationException;
 
 class BaseRequest extends FormRequest
 {
@@ -12,5 +14,6 @@ class BaseRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         $this->validator = $validator;
+        throw ValidationException::withMessages([ApiResponser::unprocessableEntity => $validator->getMessageBag()]);
     }
 }

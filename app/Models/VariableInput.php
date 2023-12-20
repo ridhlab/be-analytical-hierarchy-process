@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class VariableInput extends Model
 {
     use HasFactory;
+
+    protected $table = 'variable_inputs';
 }

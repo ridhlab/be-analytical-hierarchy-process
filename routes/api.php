@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\VariableInput\VariableInputController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,4 +24,15 @@ Route::controller(AuthController::class)->group(function () {
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::prefix('/variable-input')->controller(VariableInputController::class)->group(function () {
+        Route::get('/', 'index')->name('variable-input.index');
+        Route::get('/{id}', 'show')->name('variable-input.show');
+        Route::post('/store', 'store')->name('variable-input.store');
+    });
+
+    Route::prefix('/variable-output')->controller(VariableInputController::class)->group(function () {
+    });
 });

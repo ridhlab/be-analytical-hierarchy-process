@@ -6,6 +6,11 @@ class ApiResponser
 {
     const unprocessableEntity = 'unprocessableEntity';
 
+    public static function generateMessageStore(string $model)
+    {
+        return 'Store ' . $model . ' successfully';
+    }
+
     public static function successResponser($data, $message = null, $code = 200)
     {
         return response()->json([
