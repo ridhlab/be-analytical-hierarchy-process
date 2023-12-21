@@ -19,8 +19,10 @@ class MatrixCompareApplication
 
         $compareOutputIdExist = count(MatrixCompare::where('compare1_variable_output_id', $compare1VariableOutputId)
             ->where('compare2_variable_output_id', $compare2VariableOutputId)
+            ->where('variable_input_id', $variableInputId)
             ->get()) > 0 || count(MatrixCompare::where('compare1_variable_output_id', $compare2VariableOutputId)
             ->where('compare2_variable_output_id', $compare1VariableOutputId)
+            ->where('variable_input_id', $variableInputId)
             ->get()) > 0;
 
         if ($compareOutputIdExist) {
@@ -34,10 +36,10 @@ class MatrixCompareApplication
         }
         if ($compare1VariableOutputId == $compare2VariableOutputId) {
             $this->createMatrixCompare($variableInputId, $compare1VariableOutputId, $compare2VariableOutputId, $value);
+        } else {
+            $this->createMatrixCompare($variableInputId, $compare1VariableOutputId, $compare2VariableOutputId, $value);
+            $this->createMatrixCompare($variableInputId, $compare2VariableOutputId, $compare1VariableOutputId, 1 / $value);
         }
-
-        $this->createMatrixCompare($variableInputId, $compare1VariableOutputId, $compare2VariableOutputId, $value);
-        $this->createMatrixCompare($variableInputId, $compare2VariableOutputId, $compare1VariableOutputId, 1 / $value);
 
         DB::commit();
         return true;
@@ -52,15 +54,18 @@ class MatrixCompareApplication
         $compare1VariableOutputId = $matrixCompare->compare1_variable_output_id;
         $compare2VariableOutputId = $matrixCompare->compare2_variable_output_id;
 
-        $matrixCompareOppsite = MatrixCompare::where('compare1_variable_output_id', $compare2VariableOutputId)
-            ->where('compare2_variable_output_id', $compare1VariableOutputId)->first();
+        if (($compare1VariableOutputId == $compare2VariableOutputId) && $value != 1) {
+            throw new HttpException(400, 'If variable output compare is same, value must be 1');
+        }
 
         $matrixCompare->value = $value;
-        $matrixCompareOppsite->value = 1 / $value;
-
+        if ($compare1VariableOutputId != $compare2VariableOutputId) {
+            $matrixCompareOppsite = MatrixCompare::where('compare1_variable_output_id', $compare2VariableOutputId)
+                ->where('compare2_variable_output_id', $compare1VariableOutputId)->first();
+            $matrixCompareOppsite->value = 1 / $value;
+            $matrixCompareOppsite->save();
+        }
         $matrixCompare->save();
-        $matrixCompareOppsite->save();
-
         DB::commit();
         return true;
     }
