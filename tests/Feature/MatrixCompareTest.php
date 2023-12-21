@@ -16,9 +16,9 @@ class MatrixCompareTest extends TestCase
 
     // TODO: 
     // 1. [x] If compare1 and compare2 same id, value must be 1
-    // 2. [ ] Auto create opposite compare 
-    // 3. [ ] Auto update opposite compare
-    // 4. [ ] If compare1OutputId is exist
+    // 2. [x] Auto create opposite compare 
+    // 3. [x] Auto update opposite compare
+    // 4. [x] If compare1OutputId is exist
 
     /**
      * A basic feature test example.

@@ -4,7 +4,7 @@ namespace App\Http\Requests\MatrixCompare;
 
 use App\Http\Requests\BaseRequest;
 
-class StoreUpdateMatrixCompareRequest extends BaseRequest
+class UpdateValueMatrixCompareRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,10 +22,7 @@ class StoreUpdateMatrixCompareRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'variable_input_id' => ['integer', 'required'],
-            'compare1_variable_output_id' => ['integer', 'required'],
-            'compare2_variable_output_id' => ['integer', 'required'],
-            'value' => ['integer', 'required']
+            'value' => ['numeric', 'required']
         ];
     }
 }

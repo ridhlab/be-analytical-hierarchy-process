@@ -2,17 +2,16 @@
 
 namespace App\Domains\MatrixCompare\Applications;
 
-use App\Http\Requests\MatrixCompare\StoreUpdateMatrixCompareRequest;
+use App\Http\Requests\MatrixCompare\StoreMatrixCompareRequest;
+use App\Http\Requests\MatrixCompare\UpdateValueMatrixCompareRequest;
 use App\Models\MatrixCompare;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class MatrixCompareApplication
 {
-
-    public function store(StoreUpdateMatrixCompareRequest $request)
+    public function store(StoreMatrixCompareRequest $request)
     {
-
         $variableInputId = $request->validated()['variable_input_id'];
         $compare1VariableOutputId = $request->validated()['compare1_variable_output_id'];
         $compare2VariableOutputId = $request->validated()['compare2_variable_output_id'];
@@ -40,6 +39,27 @@ class MatrixCompareApplication
         $this->createMatrixCompare($variableInputId, $compare1VariableOutputId, $compare2VariableOutputId, $value);
         $this->createMatrixCompare($variableInputId, $compare2VariableOutputId, $compare1VariableOutputId, 1 / $value);
 
+        DB::commit();
+        return true;
+    }
+
+    public function update(UpdateValueMatrixCompareRequest $request, $id)
+    {
+        $value = $request->validated()['value'];
+
+        DB::beginTransaction();
+        $matrixCompare = MatrixCompare::findOrFail($id);
+        $compare1VariableOutputId = $matrixCompare->compare1_variable_output_id;
+        $compare2VariableOutputId = $matrixCompare->compare2_variable_output_id;
+
+        $matrixCompareOppsite = MatrixCompare::where('compare1_variable_output_id', $compare2VariableOutputId)
+            ->where('compare2_variable_output_id', $compare1VariableOutputId)->first();
+
+        $matrixCompare->value = $value;
+        $matrixCompareOppsite->value = 1 / $value;
+
+        $matrixCompare->save();
+        $matrixCompareOppsite->save();
 
         DB::commit();
         return true;

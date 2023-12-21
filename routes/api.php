@@ -47,6 +47,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/', 'index')->name('matrix-compare.index');
         Route::get('/{id}', 'show')->name('matrix-compare.show');
         Route::post('/store', 'store')->name('matrix-compare.store');
-        Route::put('/{id}/update', 'update')->name('matrix-compare.update');
+        Route::patch('/{id}/update', 'update')->name('matrix-compare.update');
     });
 });
