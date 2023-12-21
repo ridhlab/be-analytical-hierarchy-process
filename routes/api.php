@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\MatrixCompare\MatrixCompareController;
 use App\Http\Controllers\Api\VariableInput\VariableInputController;
 use App\Http\Controllers\Api\VariableOutput\VariableOutputController;
 use Illuminate\Http\Request;
@@ -40,5 +41,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/{id}', 'show')->name('variable-output.show');
         Route::post('/store', 'store')->name('variable-output.store');
         Route::put('/{id}/update', 'update')->name('variable-output.update');
+    });
+
+    Route::prefix('/matrix-compare')->controller(MatrixCompareController::class)->group(function () {
+        Route::get('/', 'index')->name('matrix-compare.index');
+        Route::get('/{id}', 'show')->name('matrix-compare.show');
+        Route::post('/store', 'store')->name('matrix-compare.store');
+        Route::put('/{id}/update', 'update')->name('matrix-compare.update');
     });
 });

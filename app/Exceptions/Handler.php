@@ -7,6 +7,8 @@ use Illuminate\Validation\ValidationException;
 use App\Shareds\ApiResponser;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -34,6 +36,9 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $exception)
     {
+        if ($exception instanceof HttpException) {
+            return ApiResponser::errorResponse($exception->getMessage());
+        }
         if ($exception instanceof ValidationException) {
             return ApiResponser::errorResponse($exception->errors());
         }
@@ -41,6 +46,9 @@ class Handler extends ExceptionHandler
             return ApiResponser::errorResponse($exception->getMessage());
         }
         if ($exception instanceof ModelNotFoundException) {
+            return ApiResponser::errorResponse($exception->getMessage());
+        }
+        if ($exception instanceof QueryException) {
             return ApiResponser::errorResponse($exception->getMessage());
         }
         return parent::render($request, $exception);
