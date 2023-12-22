@@ -5,11 +5,62 @@ namespace App\Domains\MatrixCompare\Applications;
 use App\Http\Requests\MatrixCompare\StoreMatrixCompareRequest;
 use App\Http\Requests\MatrixCompare\UpdateValueMatrixCompareRequest;
 use App\Models\MatrixCompare;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class MatrixCompareApplication
 {
+    public function getByVariabelInputId(string $id): Collection
+    {
+        return MatrixCompare::where('variable_input_id', $id)->get();
+    }
+
+    public function getByVariableInputIdAndCompare2OutputId($inputId, $compare2OutputId): Collection
+    {
+        return MatrixCompare::where('variable_input_id', $inputId)
+            ->where('compare2_variable_output_id', $compare2OutputId)
+            ->get();
+    }
+
+    public function getNormalizationByVariableInputId(string $id)
+    {
+        $mappingTotal = $this->getTotalCompares($id);
+        $normalization = [];
+        foreach ($mappingTotal as $mappingTotalItem) {
+            $totalCompares = $mappingTotalItem['total'];
+            $outputId = $mappingTotalItem['compare2_variable_output_id'];
+            $data = $this->getByVariableInputIdAndCompare2OutputId($id, $outputId);
+            $tempNormalization = $data->map(function ($item, $key) use ($totalCompares) {
+                $valueNormalization = $item['value'] / $totalCompares;
+                $item['valueNormalization'] = $valueNormalization;
+                $item['totalCompares'] = $totalCompares;
+                return $item;
+            })->values()->toArray();
+            array_push($normalization, ['compare2VariableOutputId' => $outputId, 'normalization' => $tempNormalization]);
+        }
+        return $normalization;
+    }
+
+    public function getTotalCompares(string $variableInputId)
+    {
+        $matrixCompare = $this->getByVariabelInputId($variableInputId);
+        $grouped = (collect($matrixCompare)->map(function ($item, int $key) {
+            return [
+                'id' => $item['id'],
+                'value' => $item['value'],
+                'compare2_variable_output_id' => $item['compare2_variable_output_id']
+            ];
+        }))->groupBy('compare2_variable_output_id');
+        return $grouped->map(function ($item, int $key) {
+            $total = 0;
+            foreach ($item as $value) {
+                $total += $value['value'];
+            }
+            return ['compare2_variable_output_id' => $key, 'total' => $total];
+        })->values();
+    }
+
     public function store(StoreMatrixCompareRequest $request)
     {
         $variableInputId = $request->validated()['variable_input_id'];

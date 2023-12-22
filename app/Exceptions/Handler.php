@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
+use TypeError;
 
 class Handler extends ExceptionHandler
 {
@@ -36,6 +37,9 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $exception)
     {
+        if ($exception instanceof TypeError) {
+            return ApiResponser::errorResponse('Internal Server Error', 500);
+        }
         if ($exception instanceof HttpException) {
             return ApiResponser::errorResponse($exception->getMessage());
         }

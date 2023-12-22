@@ -21,12 +21,14 @@ class FrontendCase
 
     public function handle(Request $request, Closure $next)
     {
+        $query = $request->query();
         $request->replace(
             $this->convertKeysToCase(
                 self::CASE_SNAKE,
                 $request->post()
             )
         );
+        $request->merge($query);
         $response = $next($request);
         if ($response instanceof JsonResponse) {
             $response->setData(
