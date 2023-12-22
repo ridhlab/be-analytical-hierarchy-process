@@ -23,6 +23,31 @@ class MatrixCompareApplication
             ->get();
     }
 
+    public function getWeightsByVariableInputId($id)
+    {
+        $dataNormalizations = $this->getNormalizationByVariableInputId($id);
+        $arr = [];
+        foreach ($dataNormalizations as $normalization) {
+            foreach ($normalization['normalization'] as $itemNormalization) {
+                array_push($arr, $itemNormalization);
+            }
+        }
+        $mappingNormalization = collect($arr)->groupBy('compare1_variable_output_id')->map(function ($item, $key) {
+            return ['compare1VariableOutputId' => $key, 'normalization' => $item];
+        })->values();
+
+        return collect($mappingNormalization)->map(function ($normalization) {
+            $sum = 0;
+            foreach ($normalization['normalization'] as $item) {
+                $sum += $item['valueNormalization'];
+            }
+            return [
+                'variableOutputId' => $normalization['compare1VariableOutputId'],
+                'weight' => $sum / count($normalization['normalization'])
+            ];
+        });
+    }
+
     public function getNormalizationByVariableInputId(string $id)
     {
         $mappingTotal = $this->getTotalCompares($id);

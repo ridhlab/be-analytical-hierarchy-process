@@ -46,6 +46,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('/matrix-compare')->controller(MatrixCompareController::class)->group(function () {
         Route::get('/', 'index')->name('matrix-compare.index');
         Route::get('/normalization', 'normalization')->name('matrix-compare.normalization');
+        Route::get('/weight', 'weight')->name('matrix-compare.weight');
         Route::post('/store', 'store')->name('matrix-compare.store');
         Route::patch('/{id}/update', 'update')->name('matrix-compare.update');
     });

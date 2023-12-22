@@ -34,7 +34,15 @@ class MatrixCompareController
     {
         if ($request->has('variable_input_id')) {
             $data = $this->matrixCompareApplication->getNormalizationByVariableInputId($request->query('variable_input_id'));
-            return ApiResponser::successResponser($data, 'Get normalization successfully');
+            return ApiResponser::successResponser($data, 'Get normalizations successfully');
+        }
+    }
+
+    public function weight(Request $request)
+    {
+        if ($request->has('variable_input_id')) {
+            $data = $this->matrixCompareApplication->getWeightsByVariableInputId($request->query('variable_input_id'));
+            return ApiResponser::successResponser($data, 'Get weights successfully');
         }
     }
 
