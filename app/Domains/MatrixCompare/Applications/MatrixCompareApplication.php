@@ -25,6 +25,24 @@ class MatrixCompareApplication
             ->get();
     }
 
+    public function getWeightsByVariableOutputId($id)
+    {
+        return ([
+            'variableOutputId' => (int)$id,
+            'variableOutputName' => VariableOutput::getNameById($id),
+            'weights' => VariableInput::all(['id', 'name'])->map(function ($variableInput) use ($id) {
+                $weights = $this->getWeightsByVariableInputId($variableInput->id);
+                return [
+                    'variableInputId' => $weights['variableInputId'],
+                    'variableInputName' => $weights['variableInputName'],
+                    'weight' => collect($weights['weights'])->filter(function ($weight) use ($id) {
+                        return $weight['variableOutputId'] == $id;
+                    })->first()['weight']
+                ];
+            })->all()
+        ]);
+    }
+
     public function getWeightsByVariableInputId($id)
     {
         $dataNormalizations = $this->getNormalizationByVariableInputId($id);
@@ -39,7 +57,8 @@ class MatrixCompareApplication
         })->values();
 
         return [
-            'variableInputId' => $id, 'variableInputName' => VariableInput::getNameById($id),
+            'variableInputId' => (int)$id,
+            'variableInputName' => VariableInput::getNameById($id),
             'weights' => collect($mappingNormalization)->map(function ($normalization) {
                 $sum = 0;
                 foreach ($normalization['normalization'] as $item) {
@@ -143,7 +162,8 @@ class MatrixCompareApplication
 
         $matrixCompare->value = $value;
         if ($compare1VariableOutputId != $compare2VariableOutputId) {
-            $matrixCompareOppsite = MatrixCompare::where('variable_input_id', $variableInputId)->where('compare1_variable_output_id', $compare2VariableOutputId)
+            $matrixCompareOppsite = MatrixCompare::where('variable_input_id', $variableInputId)
+                ->where('compare1_variable_output_id', $compare2VariableOutputId)
                 ->where('compare2_variable_output_id', $compare1VariableOutputId)->first();
             $matrixCompareOppsite->value = 1 / $value;
             $matrixCompareOppsite->save();

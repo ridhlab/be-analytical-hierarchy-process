@@ -44,6 +44,10 @@ class MatrixCompareController
             $data = $this->matrixCompareApplication->getWeightsByVariableInputId($request->query('variable_input_id'));
             return ApiResponser::successResponser($data, 'Get weights successfully');
         }
+        if ($request->has('variable_output_id')) {
+            $data = $this->matrixCompareApplication->getWeightsByVariableOutputId($request->query('variable_output_id'));
+            return ApiResponser::successResponser($data, 'Get weights successfully');
+        }
     }
 
     public function store(StoreMatrixCompareRequest $request)
