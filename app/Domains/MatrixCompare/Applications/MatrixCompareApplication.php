@@ -129,6 +129,7 @@ class MatrixCompareApplication
         $matrixCompare = MatrixCompare::findOrFail($id);
         $compare1VariableOutputId = $matrixCompare->compare1_variable_output_id;
         $compare2VariableOutputId = $matrixCompare->compare2_variable_output_id;
+        $variableInputId = $matrixCompare->variable_input_id;
 
         if (($compare1VariableOutputId == $compare2VariableOutputId) && $value != 1) {
             throw new HttpException(400, 'If variable output compare is same, value must be 1');
@@ -136,7 +137,7 @@ class MatrixCompareApplication
 
         $matrixCompare->value = $value;
         if ($compare1VariableOutputId != $compare2VariableOutputId) {
-            $matrixCompareOppsite = MatrixCompare::where('compare1_variable_output_id', $compare2VariableOutputId)
+            $matrixCompareOppsite = MatrixCompare::where('variable_input_id', $variableInputId)->where('compare1_variable_output_id', $compare2VariableOutputId)
                 ->where('compare2_variable_output_id', $compare1VariableOutputId)->first();
             $matrixCompareOppsite->value = 1 / $value;
             $matrixCompareOppsite->save();
