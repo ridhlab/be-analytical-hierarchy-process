@@ -8,6 +8,7 @@ use App\Http\Requests\MatrixCompare\UpdateValueMatrixCompareRequest;
 use App\Shareds\ApiResponser;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -21,12 +22,32 @@ class MatrixCompareController
     }
 
 
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->has('variable_input_id')) {
+            $data = $this->matrixCompareApplication->getByVariabelInputId($request->query('variable_input_id'));
+            return ApiResponser::successResponser($data, 'Get data matrix compare succesfully');
+        }
     }
 
-    public function show($id)
+    public function normalization(Request $request)
     {
+        if ($request->has('variable_input_id')) {
+            $data = $this->matrixCompareApplication->getNormalizationByVariableInputId($request->query('variable_input_id'));
+            return ApiResponser::successResponser($data, 'Get normalizations successfully');
+        }
+    }
+
+    public function weight(Request $request)
+    {
+        if ($request->has('variable_input_id')) {
+            $data = $this->matrixCompareApplication->getWeightsByVariableInputId($request->query('variable_input_id'));
+            return ApiResponser::successResponser($data, 'Get weights successfully');
+        }
+        if ($request->has('variable_output_id')) {
+            $data = $this->matrixCompareApplication->getWeightsByVariableOutputId($request->query('variable_output_id'));
+            return ApiResponser::successResponser($data, 'Get weights successfully');
+        }
     }
 
     public function store(StoreMatrixCompareRequest $request)

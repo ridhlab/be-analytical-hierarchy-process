@@ -16,4 +16,9 @@ class VariableInput extends Model
     {
         return $this->hasMany(MatrixCompare::class, 'variable_input_id');
     }
+
+    public static function getNameById($id)
+    {
+        return VariableInput::findOrFail($id)->name;
+    }
 }

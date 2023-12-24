@@ -21,4 +21,9 @@ class VariableOutput extends Model
     {
         return $this->hasMany(MatrixCompare::class, 'compare2_variable_output_id');
     }
+
+    public static function getNameById($id)
+    {
+        return VariableOutput::findOrFail($id)->name;
+    }
 }
