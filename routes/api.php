@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\MatrixCompare\MatrixCompareController;
+use App\Http\Controllers\Api\Result\ResultController;
 use App\Http\Controllers\Api\VariableInput\VariableInputController;
 use App\Http\Controllers\Api\VariableOutput\VariableOutputController;
 use Illuminate\Http\Request;
@@ -50,4 +51,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/store', 'store')->name('matrix-compare.store');
         Route::patch('/{id}/update', 'update')->name('matrix-compare.update');
     });
+
+    Route::post('/predict', [ResultController::class, 'predict'])->name('predict');
 });
