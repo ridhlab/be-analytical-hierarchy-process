@@ -24,11 +24,8 @@ class PermissionRoleSeeder extends Seeder
         $roleUser->givePermissionTo($permissionShowVariableInput);
         $permissionStoreVariableInput = Permission::create(['name' => 'variable-input.store']);
         $roleAdmin->givePermissionTo($permissionStoreVariableInput);
-        $roleUser->givePermissionTo($permissionStoreVariableInput);
         $permissionUpdateVariableInput = Permission::create(['name' => 'variable-input.update']);
         $roleAdmin->givePermissionTo($permissionUpdateVariableInput);
-        $roleUser->givePermissionTo($permissionUpdateVariableInput);
-
 
         $permissionIndexVariableOutput = Permission::create(['name' => 'variable-output.index']);
         $roleAdmin->givePermissionTo($permissionIndexVariableOutput);
@@ -38,10 +35,8 @@ class PermissionRoleSeeder extends Seeder
         $roleUser->givePermissionTo($permissionShowVariableOutput);
         $permissionStoreVariableOutput = Permission::create(['name' => 'variable-output.store']);
         $roleAdmin->givePermissionTo($permissionStoreVariableOutput);
-        $roleUser->givePermissionTo($permissionStoreVariableOutput);
         $permissionUpdateVariableOutput = Permission::create(['name' => 'variable-output.update ']);
         $roleAdmin->givePermissionTo($permissionUpdateVariableOutput);
-        $roleUser->givePermissionTo($permissionUpdateVariableOutput);
 
         $permissionIndexMatrixCompare =  Permission::create(['name' => 'matrix-compare.index']);
         $roleAdmin->givePermissionTo($permissionIndexMatrixCompare);
@@ -54,10 +49,8 @@ class PermissionRoleSeeder extends Seeder
         $roleUser->givePermissionTo($permissionWeightMatrixCompare);
         $permissionStoreMatrixCompare = Permission::create(['name' => 'matrix-compare.store']);
         $roleAdmin->givePermissionTo($permissionStoreMatrixCompare);
-        $roleUser->givePermissionTo($permissionStoreMatrixCompare);
         $permissionUpdateMatrixCompare = Permission::create(['name' => 'matrix-compare.update']);
         $roleAdmin->givePermissionTo($permissionUpdateMatrixCompare);
-        $roleUser->givePermissionTo($permissionUpdateMatrixCompare);
 
         $permissionPredict = Permission::create(['name' => 'predict']);
         $roleAdmin->givePermissionTo($permissionPredict);
