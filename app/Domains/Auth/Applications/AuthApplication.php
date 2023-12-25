@@ -7,7 +7,7 @@ use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
 use App\Shareds\ApiResponser;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
+use Spatie\Permission\Models\Role;
 
 class AuthApplication
 {
@@ -18,6 +18,7 @@ class AuthApplication
         $user->name = $request->validated()['name'];
         $user->email = $request->validated()['email'];
         $user->password = bcrypt($request->validated()['password']);
+        $user->assignRole(Role::where('name', 'user')->first());
         $user->save();
 
         $token = $this->generateToken($user);
