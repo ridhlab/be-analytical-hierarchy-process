@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\MatrixCompare\MatrixCompareController;
 use App\Http\Controllers\Api\Result\ResultController;
 use App\Http\Controllers\Api\VariableInput\VariableInputController;
 use App\Http\Controllers\Api\VariableOutput\VariableOutputController;
+use App\Http\Controllers\Role\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,32 +26,34 @@ Route::controller(AuthController::class)->group(function () {
     Route::middleware('auth:sanctum')->post('/logout', 'logout');
 });
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::middleware('auth:sanctum')->group(function () {
+    Route::prefix('/user')->group(function () {
+        Route::get('/', function (Request $request) {
+            return $request->user();
+        });
+    });
+
     Route::prefix('/variable-input')->controller(VariableInputController::class)->group(function () {
-        Route::get('/', 'index')->name('variable-input.index');
-        Route::get('/{id}', 'show')->name('variable-input.show');
-        Route::post('/store', 'store')->name('variable-input.store');
-        Route::put('/{id}/update', 'update')->name('variable-input.update');
+        Route::get('/', 'index')->name('variable-input.index')->middleware(['permission:variable-input.index']);
+        Route::get('/{id}', 'show')->name('variable-input.show')->middleware(['permission:variable-input.show']);
+        Route::post('/store', 'store')->name('variable-input.store')->middleware(['permission:variable-input.store']);
+        Route::put('/{id}/update', 'update')->name('variable-input.update')->middleware(['permission:variable-input.update']);
     });
 
     Route::prefix('/variable-output')->controller(VariableOutputController::class)->group(function () {
-        Route::get('/', 'index')->name('variable-output.index');
-        Route::get('/{id}', 'show')->name('variable-output.show');
-        Route::post('/store', 'store')->name('variable-output.store');
-        Route::put('/{id}/update', 'update')->name('variable-output.update');
+        Route::get('/', 'index')->name('variable-output.index')->middleware(['permission:variable-output.index']);
+        Route::get('/{id}', 'show')->name('variable-output.show')->middleware(['permission:variable-output.show']);
+        Route::post('/store', 'store')->name('variable-output.store')->middleware(['permission:variable-output.store']);
+        Route::put('/{id}/update', 'update')->name('variable-output.update')->middleware(['permission:variable-output.update']);
     });
 
     Route::prefix('/matrix-compare')->controller(MatrixCompareController::class)->group(function () {
-        Route::get('/', 'index')->name('matrix-compare.index');
-        Route::get('/normalization', 'normalization')->name('matrix-compare.normalization');
-        Route::get('/weight', 'weight')->name('matrix-compare.weight');
-        Route::post('/store', 'store')->name('matrix-compare.store');
-        Route::patch('/{id}/update', 'update')->name('matrix-compare.update');
+        Route::get('/', 'index')->name('matrix-compare.index')->middleware(['permission:matrix-compare.index']);
+        Route::get('/normalization', 'normalization')->name('matrix-compare.normalization')->middleware(['permission:matrix-compare.normalization']);
+        Route::get('/weight', 'weight')->name('matrix-compare.weight')->middleware(['permission:matrix-compare.weight']);
+        Route::post('/store', 'store')->name('matrix-compare.store')->middleware(['permission:matrix-compare.store']);
+        Route::patch('/{id}/update', 'update')->name('matrix-compare.update')->middleware(['matrix-compare.update']);
     });
 
-    Route::post('/predict', [ResultController::class, 'predict'])->name('predict');
+    Route::post('/predict', [ResultController::class, 'predict'])->name('predict')->middleware(['permission:predict']);
 });
