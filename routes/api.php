@@ -29,6 +29,7 @@ Route::controller(AuthController::class)->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('/user')->group(function () {
         Route::get('/', function (Request $request) {
+            $request->user()->getAllPermissions();
             return $request->user();
         });
     });
