@@ -22,6 +22,8 @@ class AuthApplication
         $user->save();
 
         $token = $this->generateToken($user);
+        $user->getAllPermissions();
+
         return ApiResponser::successResponser(['user' => $user, 'token' => $token], 'Register successfully');
     }
 
@@ -31,6 +33,7 @@ class AuthApplication
             return ApiResponser::errorResponse('Email atau password Anda Salah');
         }
         $user = Auth::user();
+        $user->getAllPermissions();
         $token = $this->generateToken($user);
         return ApiResponser::successResponser(['user' => $user, 'token' => $token], 'Login successfully');
     }
