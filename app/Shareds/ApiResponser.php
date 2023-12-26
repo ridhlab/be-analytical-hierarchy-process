@@ -25,12 +25,12 @@ class ApiResponser
         ], $code);
     }
 
-    public static function errorResponse($message = null, $code = 400)
+    public static function errorResponse($message = null, $code = 400, $data = null)
     {
         return response()->json([
             'status' => 'Error',
             'message' => $message,
-            'data' => null
+            'data' => $data
         ], $code);
     }
 }
