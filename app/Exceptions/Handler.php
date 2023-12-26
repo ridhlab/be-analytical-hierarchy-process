@@ -44,7 +44,7 @@ class Handler extends ExceptionHandler
             return ApiResponser::errorResponse($exception->getMessage());
         }
         if ($exception instanceof ValidationException) {
-            return ApiResponser::errorResponse($exception->errors());
+            return ApiResponser::errorResponse('Invalid data submitted', 422, $exception->errors());
         }
         if ($exception instanceof AuthenticationException) {
             return ApiResponser::errorResponse($exception->getMessage());
