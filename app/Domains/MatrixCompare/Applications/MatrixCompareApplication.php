@@ -13,9 +13,14 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class MatrixCompareApplication
 {
-    public function getByVariabelInputId(string $id): Collection
+    public function getByVariabelInputId(string $id): array
     {
-        return MatrixCompare::where('variable_input_id', $id)->get();
+        $variableInputName = VariableInput::getNameById($id);
+        return [
+            'variableInputName' => $variableInputName,
+            'variableInputId' => $id,
+            'matrixCompares' => MatrixCompare::with('compare1VariableOutput', 'compare2VariableOutput')->where('variable_input_id', $id)->get()
+        ];
     }
 
     public function getByVariableInputIdAndCompare2OutputId($inputId, $compare2OutputId): Collection
