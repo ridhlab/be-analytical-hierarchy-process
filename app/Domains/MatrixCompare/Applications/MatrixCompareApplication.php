@@ -18,7 +18,7 @@ class MatrixCompareApplication
         $variableInputName = VariableInput::getNameById($id);
         return [
             'variableInputName' => $variableInputName,
-            'variableInputId' => $id,
+            'variableInputId' => (int)$id,
             'matrixCompares' => MatrixCompare::with('compare1VariableOutput', 'compare2VariableOutput')->where('variable_input_id', $id)->get()
         ];
     }
