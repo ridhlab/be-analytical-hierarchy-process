@@ -12,17 +12,17 @@ class MatrixCompare extends Model
 
     public function variableInput(): BelongsTo
     {
-        return $this->belongsTo(VariableInput::class . 'variable_input_id');
+        return $this->belongsTo(VariableInput::class, 'variable_input_id');
     }
 
     public function compare1VariableOutput(): BelongsTo
     {
-        return $this->belongsTo(VariableOutput::class . 'compare1_variable_output_id');
+        return $this->belongsTo(VariableOutput::class, 'compare1_variable_output_id');
     }
 
 
     public function compare2VariableOutput(): BelongsTo
     {
-        return $this->belongsTo(VariableOutput::class . 'compare2_variable_output_id');
+        return $this->belongsTo(VariableOutput::class, 'compare2_variable_output_id');
     }
 }
