@@ -99,7 +99,7 @@ class MatrixCompareApplication
 
     public function getTotalCompares(string $variableInputId)
     {
-        $matrixCompare = $this->getByVariabelInputId($variableInputId);
+        $matrixCompare = $this->getByVariabelInputId($variableInputId)['matrixCompares'];
         $grouped = (collect($matrixCompare)->map(function ($item, int $key) {
             return [
                 'id' => $item['id'],
