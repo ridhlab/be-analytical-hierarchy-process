@@ -54,6 +54,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/weight', 'weight')->name('matrix-compare.weight')->middleware(['permission:matrix-compare.weight']);
         Route::post('/store', 'store')->name('matrix-compare.store')->middleware(['permission:matrix-compare.store']);
         Route::patch('/{id}/update', 'update')->name('matrix-compare.update')->middleware(['matrix-compare.update']);
+
+        Route::put('/edit-by-input-id/{inputId}', 'massUpdateByInputId')->name('matrix-compare.edit-by-input-id');
     });
 
     Route::post('/predict', [ResultController::class, 'predict'])->name('predict')->middleware(['permission:predict']);

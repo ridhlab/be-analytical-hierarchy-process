@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class MatrixCompareController
@@ -81,6 +82,19 @@ class MatrixCompareController
             }
             if ($e instanceof ModelNotFoundException) {
                 return ApiResponser::errorResponse($e->getMessage());
+            }
+        }
+    }
+
+    public function massUpdateByInputId(Request $request, $inputId)
+    {
+        try {
+            $data = $this->matrixCompareApplication->massUpdateByInputId($request, $inputId);
+            return ApiResponser::successResponser(null, 'Update matrix compares successfully');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            if ($e instanceof ValidationException) {
+                return ApiResponser::errorResponse('Invalid data submitted', 422, $e->errors());
             }
         }
     }
