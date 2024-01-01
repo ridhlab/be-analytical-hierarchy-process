@@ -7,8 +7,12 @@ use App\Http\Requests\MatrixCompare\UpdateValueMatrixCompareRequest;
 use App\Models\MatrixCompare;
 use App\Models\VariableInput;
 use App\Models\VariableOutput;
+use App\Shareds\ApiResponser;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class MatrixCompareApplication
@@ -99,7 +103,7 @@ class MatrixCompareApplication
 
     public function getTotalCompares(string $variableInputId)
     {
-        $matrixCompare = $this->getByVariabelInputId($variableInputId);
+        $matrixCompare = $this->getByVariabelInputId($variableInputId)['matrixCompares'];
         $grouped = (collect($matrixCompare)->map(function ($item, int $key) {
             return [
                 'id' => $item['id'],
@@ -114,6 +118,42 @@ class MatrixCompareApplication
             }
             return ['compare2_variable_output_id' => $key, 'total' => $total];
         })->values();
+    }
+
+
+    public function massUpdateByInputId(Request $request, $inputId)
+    {
+        $validator =  Validator::make($request->all(), [
+            'matrix_compares' => 'present|array',
+            'matrix_compares.*.compare1_variable_output_id' => 'required|integer',
+            'matrix_compares.*.compare2_variable_output_id' => 'required|integer',
+            'matrix_compares.*.value' => 'required|numeric'
+        ]);
+        if ($validator->fails()) {
+            throw ValidationException::withMessages([ApiResponser::unprocessableEntity => $validator->getMessageBag()]);
+        }
+        $matrixCompares = $validator->validated()['matrix_compares'];
+        DB::beginTransaction();
+        foreach ($matrixCompares as $matrixCompare) {
+            $compare1VariableOutputId = $matrixCompare['compare1_variable_output_id'];
+            $compare2VariableOutputId = $matrixCompare['compare2_variable_output_id'];
+
+            $matrixCompareExist = MatrixCompare::where('variable_input_id', $inputId)
+                ->where('compare1_variable_output_id', $compare1VariableOutputId)
+                ->where('compare2_variable_output_id', $compare2VariableOutputId)->first();
+            $notExist = $matrixCompareExist == null;
+
+            if ($notExist) {
+                $this->createMatrixCompare($inputId, $compare1VariableOutputId, $compare2VariableOutputId, $matrixCompare['value']);
+            } else {
+                $matrixCompareExist->compare1_variable_output_id = $compare1VariableOutputId;
+                $matrixCompareExist->compare2_variable_output_id = $compare2VariableOutputId;
+                $matrixCompareExist->value = $matrixCompare['value'];
+                $matrixCompareExist->save();
+            }
+        }
+        DB::commit();
+        return true;
     }
 
     public function store(StoreMatrixCompareRequest $request)
