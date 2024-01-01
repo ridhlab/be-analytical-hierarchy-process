@@ -21,6 +21,16 @@ class ResultApplication
         $this->matrixCompareApplication = $matrixCompareApplication;
     }
 
+    public function getByUserLogin(Request $request)
+    {
+        return  Result::with('inputValues')->where('user_id', $request->user()->id)->get();
+    }
+
+    public function getById($id)
+    {
+        return Result::with('inputValues')->findOrFail($id);
+    }
+
     public function predict(Request $request)
     {
         $userId = Auth::user()->id;

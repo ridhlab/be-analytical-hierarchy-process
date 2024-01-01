@@ -59,4 +59,9 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::post('/predict', [ResultController::class, 'predict'])->name('predict')->middleware(['permission:predict']);
+    Route::get('/result-by-user-login', [ResultController::class, 'getByUserLogin'])->name('result-by-user-login');
+    Route::get('/result/{id}', [ResultController::class, 'getById'])->name('result.show');
+
+    // TODO: Result admin
+    // Route::get('/result-by-admin', [ResultController::class, 'index'])->name('result')->middleware([]);
 });
