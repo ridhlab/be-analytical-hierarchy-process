@@ -46,7 +46,7 @@ class MatrixCompareApplication
                     'variableInputName' => $weights['variableInputName'],
                     'weight' => collect($weights['weights'])->filter(function ($weight) use ($id) {
                         return $weight['variableOutputId'] == $id;
-                    })->first()['weight']
+                    })->first()['weight'] ?? 0
                 ];
             })->all()
         ]);
