@@ -28,7 +28,7 @@ class ResultApplication
 
     public function getById($id)
     {
-        return Result::with('inputValues')->findOrFail($id);
+        return Result::with('inputValues')->with('inputValues.variableInput')->findOrFail($id);
     }
 
     public function predict(Request $request)
