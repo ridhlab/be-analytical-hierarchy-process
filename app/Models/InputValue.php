@@ -18,4 +18,9 @@ class InputValue extends Model
     {
         return $this->belongsTo(Result::class, 'result_id');
     }
+
+    public function variableInput(): BelongsTo
+    {
+        return $this->belongsTo(VariableInput::class, 'variable_input_id');
+    }
 }

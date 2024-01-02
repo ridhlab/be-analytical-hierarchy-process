@@ -18,6 +18,24 @@ class ResultController
         $this->resultApplication = $resultApplication;
     }
 
+    public function getByUserLogin(Request $request)
+    {
+        $data = $this->resultApplication->getByUserLogin($request);
+        return ApiResponser::successResponser($data, 'Get result successfully');
+    }
+
+    public function getById($id)
+    {
+        $data = $this->resultApplication->getById($id);
+        return ApiResponser::successResponser($data, 'Get result detail successfully');
+    }
+
+    public function getPredictByResultId($resultId)
+    {
+        $data = $this->resultApplication->getPredictByResultId($resultId);
+        return ApiResponser::successResponser($data, 'Get predict successfully');
+    }
+
     public function predict(Request $request)
     {
         try {
