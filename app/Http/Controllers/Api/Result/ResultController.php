@@ -30,6 +30,12 @@ class ResultController
         return ApiResponser::successResponser($data, 'Get result detail successfully');
     }
 
+    public function getPredictByResultId($resultId)
+    {
+        $data = $this->resultApplication->getPredictByResultId($resultId);
+        return ApiResponser::successResponser($data, 'Get predict successfully');
+    }
+
     public function predict(Request $request)
     {
         try {

@@ -67,11 +67,22 @@ class ResultApplication
         DB::commit();
 
         // Calculate predict
+        $resultPredict =  $this->getPredict($dataInputValues);
+
+        return [
+            'resultId' => $result->id,
+            'name' => $payload['name'],
+            'predict' => $resultPredict,
+        ];
+    }
+
+    public function getPredict($inputValues)
+    {
         $outputIds = VariableOutput::all('id')->map(fn ($item) => $item->id);
-        $resultPredict =  $outputIds->map(function ($id) use ($dataInputValues) {
+        $resultPredict =  $outputIds->map(function ($id) use ($inputValues) {
             $dataWeights = $this->matrixCompareApplication->getWeightsByVariableOutputId($id);
             $valuePredict = 0;
-            foreach ($dataInputValues as $inputValue) {
+            foreach ($inputValues as $inputValue) {
                 $currentWeight =  collect($dataWeights['weights'])->filter(fn ($item) => $item['variableInputId'] == $inputValue['variable_input_id'])->first();
                 $valuePredict += $inputValue['value'] * $currentWeight['weight'];
             }
@@ -81,11 +92,16 @@ class ResultApplication
                 'value' => $valuePredict
             ];
         })->sortByDesc('value')->values();
+        return $resultPredict;
+    }
 
+    public function getPredictByResultId($id)
+    {
+        $result = Result::with('inputValues')->with('inputValues.variableInput')->findOrFail($id);
+        $resultPredict = $this->getPredict($result->inputValues);
         return [
-            'resultId' => $result->id,
-            'name' => $payload['name'],
-            'predict' => $resultPredict,
+            'result' => $result,
+            'predict' => $resultPredict
         ];
     }
 
