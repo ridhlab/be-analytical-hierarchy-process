@@ -83,6 +83,7 @@ class ResultApplication
         })->sortByDesc('value')->values();
 
         return [
+            'resultId' => $result->id,
             'name' => $payload['name'],
             'predict' => $resultPredict,
         ];
